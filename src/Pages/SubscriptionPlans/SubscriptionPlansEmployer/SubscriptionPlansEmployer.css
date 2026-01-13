@@ -1,0 +1,13 @@
+.plan-card {
+  border-radius: 12px;
+  transition: 0.3s ease-in-out;
+}
+
+.plan-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.form-label {
+  font-size: 14px;
+}

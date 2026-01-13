@@ -1,0 +1,30 @@
+.table-container {
+  background-color: #f8f9fa !important;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+.table th, 
+.table td {
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.btn-primary {
+  background-color: #2F4CDD !important;
+  border: none;
+}
+
+.btn-outline-primary {
+  border-color: #2F4CDD !important;
+  color: #2F4CDD !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #2F4CDD !important;
+  color: white !important;
+}
