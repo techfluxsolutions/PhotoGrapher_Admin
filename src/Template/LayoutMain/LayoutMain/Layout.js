@@ -1,79 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import DashboardNavbar from "../DashboardNavbar/DashboardNavbar"; // Renamed to PascalCase
-// import Sidebar from "../Sidebar/Sidebar";
-// import "./Layout.css";
-// import { Outlet } from "react-router-dom";
-
-// const Layout = () => {
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(
-//     // Check if sidebar state exists in sessionStorage, if not, default to true
-//     JSON.parse(sessionStorage.getItem('isSidebarOpen')) || true
-//   );
-
-//   const toggleSidebar = () => {
-//     setIsSidebarOpen(!isSidebarOpen);
-//   };
-
-//   // Use effect to store the sidebar status in sessionStorage whenever it changes
-//   useEffect(() => {
-//     sessionStorage.setItem('isSidebarOpen', isSidebarOpen);
-//   }, [isSidebarOpen]);
-
-//   return (
-//     <div className="layout">
-//       <Sidebar isOpen={isSidebarOpen} />
-//       <div className={`content-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-//         <DashboardNavbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} /> {/* PascalCase used */}
-//         <main className="main-content"> {/* Removed extra dot before class name */}
-//           <Outlet context={{ isSidebarOpen }} />
-//         </main>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Layout;
-
-
-
-// import React, { useState, useEffect } from "react";
-// import DashboardNavbar from "../DashboardNavbar/DashboardNavbar";
-// import Sidebar from "../Sidebar/Sidebar";
-// import { Outlet } from "react-router-dom";
-// import "./Layout.css";
-
-// const Layout = () => {
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(
-//     JSON.parse(sessionStorage.getItem("isSidebarOpen")) || true
-//   );
-
-//   const toggleSidebar = () => {
-//     setIsSidebarOpen(!isSidebarOpen);
-//   };
-
-//   useEffect(() => {
-//     sessionStorage.setItem("isSidebarOpen", isSidebarOpen);
-//   }, [isSidebarOpen]);
-
-//   return (
-//     <div className="layout">
-//       <Sidebar isOpen={isSidebarOpen} />
-
-//       <div className={`content-container ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
-//         <DashboardNavbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
-
-//         <main className="main-content">
-//           <Outlet />
-//         </main>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Layout;
-
-
-
 import React, { useState, useEffect } from "react";
 import DashboardNavbar from "../DashboardNavbar/DashboardNavbar";
 import Sidebar from "../Sidebar/Sidebar";
@@ -81,24 +5,63 @@ import "./Layout.css";
 import { Outlet } from "react-router-dom";
 
 const Layout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(
-    JSON.parse(sessionStorage.getItem("isSidebarOpen")) || true
-  );
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  const getInitialSidebarState = () => {
+    const savedState = sessionStorage.getItem("isSidebarOpen");
+    return savedState ? JSON.parse(savedState) : true;
   };
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(getInitialSidebarState);
+  const handleMenuClick = () => {
+    if (window.innerWidth <= 1024) {
+      setIsSidebarOpen(false);
+    }
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
+  // 🔹 Handle mobile & tablet default = false
   useEffect(() => {
-    sessionStorage.setItem("isSidebarOpen", isSidebarOpen);
+    const handleResize = () => {
+      if (window.innerWidth <= 1024) {
+        setIsSidebarOpen(false);
+      } else {
+        // desktop → restore saved state or open
+        setIsSidebarOpen(getInitialSidebarState());
+      }
+    };
+
+    handleResize(); // run once on mount
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 🔹 Persist only on desktop
+  useEffect(() => {
+    if (window.innerWidth > 1024) {
+      sessionStorage.setItem("isSidebarOpen", isSidebarOpen);
+    }
   }, [isSidebarOpen]);
 
   return (
     <div className="layout">
-      <Sidebar isOpen={isSidebarOpen} />
-      <DashboardNavbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onItemClick={handleMenuClick}
+      />
 
-      <div className={`content-container ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
+
+      <DashboardNavbar
+        toggleSidebar={toggleSidebar}
+        isSidebarOpen={isSidebarOpen}
+      />
+
+      <div
+        className={`content-container ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
+          }`}
+      >
         <main className="main-content">
           <Outlet context={{ isSidebarOpen }} />
         </main>
@@ -108,4 +71,3 @@ const Layout = () => {
 };
 
 export default Layout;
-

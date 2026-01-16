@@ -42,27 +42,20 @@ const DashboardNavbar = ({ toggleSidebar, isSidebarOpen }) => {
       <div className="leftside_navbar_dashboard">
         <div className="DineRightLogo_Dashboard">
         {!isSidebarOpen && (
-              //   <span  style={{cursor:"default"}} className="navbar-brand font-serif">
-              //   Servyo
-              // </span>
-
               <img 
-              src="/ProjectLogo/HireRoofer_Logo.png" 
+              src="/ProjectLogo/photography_logo.png" 
               alt="Hire Roofer Logo" 
-              className="navbar-brand-logo" 
-              style={{ height: "40px", cursor: "pointer" }}
+              className="navbar-brand-logo navbar-logo-mobile" 
+              style={{ height: "70px", cursor: "pointer" }}
             />
           )}
 
           {isSidebarOpen && (
-              //    <span  style={{cursor:"default"}} className="navbar-brand font-serif">
-              //    Servyo
-              //  </span>
               <img 
-              src="./ProjectLogo/HireRoofer_Logo.png" 
-              alt="Hire Roofer Logo" 
-              className="navbar-brand-logo" 
-              style={{ height: "50px", cursor: "pointer" }}
+              src="./ProjectLogo/photography_logo.png" 
+              alt="Veroa Logo" 
+              className="navbar-brand-logo navbar-logo-mobile" 
+              style={{ height: "70px", cursor: "pointer" }}
             />
           )}
         </div>
@@ -84,28 +77,10 @@ const DashboardNavbar = ({ toggleSidebar, isSidebarOpen }) => {
           )}
         </div>
       </div>
-{/* 
-      <div className="Centre_navbar_dashboard">
-        <input
-          className="Search_dashboard"
-          type="text"
-          placeholder="Search.."
-        />
-      </div> */}
 
       <div className="Rightside_navbar_dashboard">
 
-        {/* <div className="notification-bell">
-          <img
-            src="./assets/images/Dashboard_Navbar/bell.png"
-            alt="Bell Icon"
-            className="notification-bell-img"
-          />
-          <span className="notification-count">{notificationCount}</span>{" "}
-   
-        </div> */}
-
-
+        
         <div className="profile-dropdown" ref={dropdownRef}>
         <img
             src="./Icons/profile_nav.png"

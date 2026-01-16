@@ -1,21 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 // All icons from react-icons/hi
 import {
   HiOutlineViewGrid,
-  HiOutlineOfficeBuilding,
-  HiOutlineBriefcase,
-  HiOutlineInformationCircle,
   HiOutlineLogout,
-  HiOutlineUsers,
-  HiOutlineCreditCard,
 } from "react-icons/hi";
 
 import "./Sidebar.css";
-
-const Sidebar = ({ isOpen }) => {
+const Sidebar = ({ isOpen, onItemClick }) => {
   const location = useLocation();
+  const [hoveredPath, setHoveredPath] = useState(null);
 
   const menuItems = [
     {
@@ -24,27 +19,76 @@ const Sidebar = ({ isOpen }) => {
       path: "/dashboard",
     },
     {
-      name: "Roofers",
-      icon: <HiOutlineOfficeBuilding size={20} />,
-      path: "/roofers",
+      name: "Bookings",
+      path: "/bookings",
+      icon: (
+        <img
+          src={
+            location.pathname === "/bookings"
+              ? "/Icons/camera-active.png"
+              : hoveredPath === "/bookings"
+                ? "/Icons/camera-active.png"
+                : "/Icons/camera-inactive.png"
+          }
+          alt="Bookings"
+          className="sidebar-png-icon"
+        />
+      ),
     },
     {
-      name: "Subscription Plan",
-      icon: <HiOutlineCreditCard size={20} />,
-      path: "/subscriptionPlan",
+      name: "My Quote",
+      path: "/my-quote",
+      icon: (
+        <img
+          src={
+            location.pathname === "/my-quote"
+              ? "/Icons/quote-active.png"
+              : hoveredPath === "/my-quote"
+                ? "/Icons/quote-active.png"
+                : "/Icons/quote-inactive.png"
+          }
+          alt="my-quote"
+          className="sidebar-png-icon"
+        />
+      ),
     },
-   {
-      name: "Subscribers",
-      icon: <HiOutlineUsers size={20} />,
-      path: "/subscribers",
-    }, 
     {
-      name: "Projects",
-      icon: <HiOutlineBriefcase size={20} />,
-      path: "/projects",
+      name: "Payment",
+      path: "/payment",
+      icon: (
+        <img
+          src={
+            location.pathname === "/payment"
+              ? "/Icons/payment-active.png"
+              : hoveredPath === "/payment"
+                ? "/Icons/payment-active.png"
+                : "/Icons/payment-inactive.png"
+          }
+          alt="payment"
+          className="sidebar-png-icon"
+        />
+      ),
     },
-    
-    
+    {
+      name: "Customer",
+      path: "/customer",
+      icon: (
+        <img
+          src={
+            location.pathname === "/customer"
+              ? "/Icons/customer-active.png"
+              : hoveredPath === "/customer"
+                ? "/Icons/customer-active.png"
+                : "/Icons/customer-inactive.png"
+          }
+          alt="customer"
+          className="sidebar-png-icon"
+        />
+      ),
+    },
+
+
+
     {
       name: "Logout",
       icon: <HiOutlineLogout size={20} />,
@@ -56,16 +100,36 @@ const Sidebar = ({ isOpen }) => {
     <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
       <ul className="sidebar-menu" style={{ marginTop: "8vh" }}>
         {menuItems.map((item) => (
-          <Link to={item.path} key={item.path}>
+          // <Link to={item.path} key={item.path}>
+          //   {/* <li
+          //     className={`menu-item ${
+          //       location.pathname === item.path ? "active" : ""
+          //     }`}
+          //   > */}
+          //   <li
+          //     className={`menu-item ${location.pathname === item.path ? "active" : ""
+          //       }`}
+          //     onMouseEnter={() => setHoveredPath(item.path)}
+          //     onMouseLeave={() => setHoveredPath(null)}
+          //   >
+
+          //     {item.icon}
+          //     {isOpen && <span>{item.name}</span>}
+          //   </li>
+          // </Link>
+
+          <Link to={item.path} key={item.path} onClick={onItemClick}>
             <li
-              className={`menu-item ${
-                location.pathname === item.path ? "active" : ""
-              }`}
+              className={`menu-item ${location.pathname === item.path ? "active" : ""
+                }`}
+              onMouseEnter={() => setHoveredPath(item.path)}
+              onMouseLeave={() => setHoveredPath(null)}
             >
               {item.icon}
               {isOpen && <span>{item.name}</span>}
             </li>
           </Link>
+
         ))}
       </ul>
     </div>

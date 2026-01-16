@@ -65,7 +65,6 @@
   font-weight: 500;
   font-size: 13px;
   line-height: 21px;
-  font-family: 'Plus Jakarta San' !important;
   color: #3F3F46 !important;
   text-decoration: none !important;
 }
@@ -111,7 +110,7 @@ a {
 /* for actively hover  */
 .menu-item.active:hover,
 .menu-item.active {
-  background-color: #2F4CDD; /* Change background on active or hover */
+  background-color: var(--color-primary);/* Change background on active or hover */
   cursor: pointer; /* Indicate it's clickable */
   border-radius: 8px;
   /* width: 87%; */
@@ -120,7 +119,7 @@ a {
 }
 
 .menu-item:hover {
-  background-color: #2F4CDD; /* Optional: Change background on hover */
+  background-color: var(--color-primary);; /* Optional: Change background on hover */
   /* width: 90%; */
   border-radius: 8px;
   text-decoration: none;

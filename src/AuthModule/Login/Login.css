@@ -1,34 +1,33 @@
+/* Make the main container fill the viewport and center content */
 .main-container {
-    /* height: 100vh;  */
+    height: 100vh; /* Full viewport height */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FAFAFA;
+    justify-content: center; /* Horizontal centering */
+    align-items: center;     /* Vertical centering */
+    background-color:var(--color-bg-main); /* Optional background */
+    padding: 1rem; /* Small padding for mobile */
+    box-sizing: border-box;
 }
 
+/* Container for the login form */
 .login-container {
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 60px 0; /* Adjusted padding for better alignment */
-    margin-top: 5vh;
 }
 
+/* Login form styling */
 .login-form {
-    background: white;
+    background: var(--color-bg-secondary); 
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 580px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px; /* Limits width on large screens */
     box-sizing: border-box;
 }
 
-.login-head {
-    margin-bottom: 45px;
-    font-size: 24px;
-    font-weight: 400;
-}
-
+/* Labels and inputs */
 .login-label {
     font-size: 14px;
     font-weight: 500;
@@ -40,69 +39,85 @@
 .login-input {
     width: 100%;
     padding: 12px;
-    margin-bottom: 35px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    box-sizing: border-box;
     font-size: 16px;
-    font-weight: 400;
-    color: #667085;
+     color: #667085 !important;
+    box-sizing: border-box;
+    background:var(--color-bg-secondary) !important;
 }
+
+
+/* Autofill fix */
+input.login-input:-webkit-autofill,
+input.login-input:-webkit-autofill:hover,
+input.login-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-bg-secondary) inset;
+  -webkit-text-fill-color: #667085; /* 👈 visible text */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 
 .login-input:focus {
     outline: none;
+    border-color:var(--color-primary); /* Highlight on focus */
 }
 
+/* Password wrapper */
+.password-wrapper {
+    position: relative;
+}
+
+/* Show/hide password button */
+.eye-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    color: var(--color-primary);
+}
+
+.eye-btn:hover {
+    opacity: 0.7;
+}
+
+/* Login button */
 .login-btn-container {
     display: flex;
-    justify-content: center; /* Centers the button */
-    margin-top: 5px; /* Reduced margin at the top */
+    justify-content: center;
+    margin-top: 1.5rem;
 }
 
 .login-btn {
-    width: 30%; 
-    padding: 0.5rem;
+    width: 100%;
+    padding: 12px;
     border: none;
     border-radius: 8px;
-    background-color: #2F4CDD;
+    background-color: var(--color-primary);
     color: white;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    transition: background 0.3s;
 }
 
 .login-btn:hover {
-    background-color: #014082;
-}
-
-.login-btn:focus {
-    outline: none;
-}
-
-.forgot-password-btn {
-    background: transparent;
-    border: none;
-    color: #C49871;
-    cursor: pointer;
-    text-decoration: underline;
-    font-size: 16px;
-    margin-top: 1rem;
-    display: block;
-    text-align: center;
-}
-
-.forgot-password-btn:hover {
-    color: #ca7123;
-}
-
-.forgot-password-btn:focus {
-    outline: none;
-    background-color: transparent;
-    border: none;
+    /* background-color: #014082; */
+     opacity: 0.7;
 }
 
 @media (max-width: 576px) {
     .login-form {
-        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .login-btn {
+        font-size: 14px;
+        padding: 10px;
     }
 }
