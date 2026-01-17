@@ -120,6 +120,15 @@
   text-align: right;
 }
 
+.sender-name {
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+
 /* Typing */
 .typing {
   font-style: italic;
