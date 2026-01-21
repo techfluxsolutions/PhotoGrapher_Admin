@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getUpcomingBookings } from "../../../utils/APIs/bookingsApis";
 import BookingsTable from "../BookingsTable/BookingsTable";
-
+import "./UpcommingBookingsTable.css"
 const LIMIT = 10;
 
 const UpcommingBookingsTable = () => {
@@ -68,6 +68,30 @@ const UpcommingBookingsTable = () => {
 
       {/* Pagination */}
       {total > LIMIT && (
+  <div className="pagination">
+    <button
+      className="pagination-btn"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Prev
+    </button>
+
+    <span className="pagination-info">
+      Page {page} of {totalPages}
+    </span>
+
+    <button
+      className="pagination-btn"
+      disabled={page === totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
+
+      {/* {total > LIMIT && (
         <div style={{ marginTop: 16 }}>
           <button
             disabled={page === 1}
@@ -87,7 +111,7 @@ const UpcommingBookingsTable = () => {
             Next
           </button>
         </div>
-      )}
+      )} */}
     </>
   );
 };

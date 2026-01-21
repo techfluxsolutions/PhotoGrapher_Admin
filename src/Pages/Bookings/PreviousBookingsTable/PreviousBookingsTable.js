@@ -70,27 +70,29 @@ const PreviousBookingsTable = () => {
       <BookingsTable data={data} page={page} limit={LIMIT}/>
 
       {/* Pagination */}
-      {total > LIMIT && (
-        <div className="pagination">
-          <button
-            disabled={page === 1 || loading}
-            onClick={() => fetchData(page - 1)}
-          >
-            Prev
-          </button>
+     {total > LIMIT && (
+  <div className="pagination">
+    <button
+      className="pagination-btn"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Prev
+    </button>
 
-          <span>
-            Page {page} of {totalPages}
-          </span>
+    <span className="pagination-info">
+      Page {page} of {totalPages}
+    </span>
 
-          <button
-            disabled={page === totalPages || loading}
-            onClick={() => fetchData(page + 1)}
-          >
-            Next
-          </button>
-        </div>
-      )}
+    <button
+      className="pagination-btn"
+      disabled={page === totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
     </>
   );
 };

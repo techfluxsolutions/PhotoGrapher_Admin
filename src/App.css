@@ -17,6 +17,7 @@ html, body, * {
   --color-bg-main: #faf9f6;
   --color-bg-secondary: #e6dccf;
   --color-primary: #4a3326;
+    --font-primary: "Libre Baskerville", serif;
 
   /* ADD THESE (for chat) */
   --primary-color: #4a3326;

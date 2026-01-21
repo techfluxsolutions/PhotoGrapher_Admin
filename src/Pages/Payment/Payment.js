@@ -61,6 +61,10 @@ const Payment = () => {
     fetchPayments();
   }, [page]);
 
+    const LIMIT=10;
+    const totalPages = Math.ceil(total / LIMIT);
+
+
   if (loading) return <Loader />;
 
   return (
@@ -75,7 +79,32 @@ const Payment = () => {
 
         <PaymentTable data={payments} />
 
-        <div style={{ marginTop: 16 }}>
+        
+      {total > LIMIT && (
+  <div className="pagination">
+    <button
+      className="pagination-btn"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Prev
+    </button>
+
+    <span className="pagination-info">
+      Page {page} of {totalPages}
+    </span>
+
+    <button
+      className="pagination-btn"
+      disabled={page === totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
+
+        {/* <div style={{ marginTop: 16 }}>
           <button disabled={page === 1} onClick={() => setPage(page - 1)}>
             Prev
           </button>
@@ -86,7 +115,7 @@ const Payment = () => {
           >
             Next
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -18,7 +18,8 @@
 
 /* Login form styling */
 .login-form {
-    background: var(--color-bg-secondary); 
+    /* background: var(--color-bg-secondary);  */
+    background-color: #ffffff;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -44,7 +45,7 @@
     font-size: 16px;
      color: #667085 !important;
     box-sizing: border-box;
-    background:var(--color-bg-secondary) !important;
+    background:var(--color-bg-main) !important;
 }
 
 
@@ -52,7 +53,7 @@
 input.login-input:-webkit-autofill,
 input.login-input:-webkit-autofill:hover,
 input.login-input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px var(--color-bg-secondary) inset;
+  /* -webkit-box-shadow: 0 0 0 1000px var(--color-bg-secondary) inset; */
   -webkit-text-fill-color: #667085; /* 👈 visible text */
   transition: background-color 5000s ease-in-out 0s;
 }

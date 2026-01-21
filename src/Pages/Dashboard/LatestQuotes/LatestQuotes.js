@@ -78,7 +78,7 @@
 
 
 import { useState } from "react";
-
+import "./LatestQuotes.css"
 const LatestQuotes = () => {
   const [showAll, setShowAll] = useState(false);
 
@@ -114,7 +114,7 @@ const LatestQuotes = () => {
   return (
     <div className="card shadow-sm">
       <div className="card-body">
-        <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="d-flex justify-content-between align-items-center mb-3 ">
           <h5 className="mb-0">Latest Quotes</h5>
           <span className="fs-4">⋮</span>
         </div>
@@ -122,7 +122,7 @@ const LatestQuotes = () => {
         {visibleQuotes.map((item, index) => (
           <div
             key={index}
-            className="d-flex justify-content-between align-items-center py-2 border-bottom"
+            className="d-flex justify-content-between align-items-center py-2 border-bottom quotes-card"
           >
             <div className="d-flex align-items-center gap-3">
               {item.avatar ? (
@@ -142,7 +142,9 @@ const LatestQuotes = () => {
 
               <div>
                 <div className="fw-semibold">{item.name}</div>
-                <small className="text-muted">{item.status}</small>
+                <small 
+                style={{ color: "#37D237" }}
+                >{item.status}</small>
               </div>
             </div>
 
@@ -152,7 +154,8 @@ const LatestQuotes = () => {
 
         {quotes.length > 3 && (
           <div
-            className="text-center mt-3 text-primary fw-semibold"
+            className="text-center mt-3 fw-semibold"
+            //  style={{ color:  }}
             role="button"
             onClick={() => setShowAll(!showAll)}
           >

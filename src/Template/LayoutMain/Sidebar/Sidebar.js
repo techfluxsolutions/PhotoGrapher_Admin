@@ -12,6 +12,18 @@ const Sidebar = ({ isOpen, onItemClick }) => {
   const location = useLocation();
   const [hoveredPath, setHoveredPath] = useState(null);
 
+  const isActive = (path) => {
+    if (path === "/my-quote") {
+      return (
+        location.pathname === "/my-quote" ||
+        location.pathname.startsWith("/chat/quote")
+      );
+    }
+    return location.pathname === path;
+  };
+
+
+
   const menuItems = [
     {
       name: "Dashboard",
@@ -40,13 +52,21 @@ const Sidebar = ({ isOpen, onItemClick }) => {
       path: "/my-quote",
       icon: (
         <img
+          // src={
+          //   location.pathname === "/my-quote"
+          //     ? "/Icons/quote-active.png"
+          //     : hoveredPath === "/my-quote"
+          //       ? "/Icons/quote-active.png"
+          //       : "/Icons/quote-inactive.png"
+          // }
           src={
-            location.pathname === "/my-quote"
+            isActive("/my-quote")
               ? "/Icons/quote-active.png"
               : hoveredPath === "/my-quote"
                 ? "/Icons/quote-active.png"
                 : "/Icons/quote-inactive.png"
           }
+
           alt="my-quote"
           className="sidebar-png-icon"
         />
@@ -120,8 +140,8 @@ const Sidebar = ({ isOpen, onItemClick }) => {
 
           <Link to={item.path} key={item.path} onClick={onItemClick}>
             <li
-              className={`menu-item ${location.pathname === item.path ? "active" : ""
-                }`}
+              className={`menu-item ${isActive(item.path) ? "active" : ""}`}
+
               onMouseEnter={() => setHoveredPath(item.path)}
               onMouseLeave={() => setHoveredPath(null)}
             >

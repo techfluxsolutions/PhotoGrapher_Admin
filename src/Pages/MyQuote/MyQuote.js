@@ -12,6 +12,7 @@ const MyQuote = () => {
     const stored = sessionStorage.getItem("isSidebarOpen");
     return stored !== null ? JSON.parse(stored) : true;
   });
+  const LIMIT = 10;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -61,6 +62,8 @@ const MyQuote = () => {
   useEffect(() => {
     fetchQuotes();
   }, [page]);
+  
+   const totalPages = Math.ceil(total / LIMIT);
 
   if (loading) return <Loader/>;
 
@@ -78,7 +81,7 @@ const MyQuote = () => {
       <QuoteTable data={quotes} />
 
       {/* Pagination (basic) */}
-      <div style={{ marginTop: 16 }}>
+      {/* <div style={{ marginTop: 16 }}>
         <button disabled={page === 1} onClick={() => setPage(page - 1)}>
           Prev
         </button>
@@ -91,7 +94,31 @@ const MyQuote = () => {
         >
           Next
         </button>
-      </div>
+      </div> */}
+
+      {total > LIMIT && (
+  <div className="pagination">
+    <button
+      className="pagination-btn"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Prev
+    </button>
+
+    <span className="pagination-info">
+      Page {page} of {totalPages}
+    </span>
+
+    <button
+      className="pagination-btn"
+      disabled={page === totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
     </div>
 </div>
   );
