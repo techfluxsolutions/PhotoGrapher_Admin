@@ -52,7 +52,7 @@ const DashboardNavbar = ({ toggleSidebar, isSidebarOpen }) => {
 
           {isSidebarOpen && (
               <img 
-              src="./ProjectLogo/photography_logo.png" 
+              src="/ProjectLogo/photography_logo.png" 
               alt="Veroa Logo" 
               className="navbar-brand-logo navbar-logo-mobile" 
               style={{ height: "70px", cursor: "pointer" }}
@@ -63,14 +63,14 @@ const DashboardNavbar = ({ toggleSidebar, isSidebarOpen }) => {
           {isSidebarOpen ? (
             <img
               className="Hamburger_MobileResponsive"
-              src="./Icons/hamburger.png"
+              src="/Icons/hamburger.png"
               alt="Hamburger Icon"
               onClick={toggleSidebar}
             />
           ) : (
             <img
               className="Hamburger_MobileResponsive"
-              src="./Icons/arrow.png"
+              src="/Icons/arrow.png"
               alt="Arrow Icon"
               onClick={toggleSidebar}
             />
@@ -83,7 +83,7 @@ const DashboardNavbar = ({ toggleSidebar, isSidebarOpen }) => {
         
         <div className="profile-dropdown" ref={dropdownRef}>
         <img
-            src="./Icons/profile_nav.png"
+            src="/Icons/profile_nav.png"
             alt="Profile"
             // onClick={toggleDropdown}
             onClick={handleLogoutClick}

@@ -12,6 +12,7 @@ const MyQuote = () => {
     const stored = sessionStorage.getItem("isSidebarOpen");
     return stored !== null ? JSON.parse(stored) : true;
   });
+  const LIMIT = 10;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,17 +29,17 @@ const MyQuote = () => {
 
   const mapQuotesResponse = (quotes = []) =>
   quotes.map((item) => ({
-    id: item._id,
-    eventType: item.eventType,
-    eventDate: new Date(item.eventDate).toLocaleDateString("en-IN"),
-    location: item.location,
-    duration: `${item.eventDuration} hrs`,
-    photography: item.photographyRequirements,
-    budget: `₹${Number(item.budget).toLocaleString("en-IN")}`,
+    id: item._id || "-",
+    eventType: item.eventType || "-",
+    eventDate: new Date(item.eventDate).toLocaleDateString("en-IN") || "-",
+    location: item.location || "-",
+    duration: `${item.eventDuration} hrs` || "-",
+    photography: item.photographyRequirements || "-",
+    budget: `₹${Number(item.budget).toLocaleString("en-IN")}` || "-",
     name: item.clientId?.username || item.clientName || "-",
-    phone: item.phoneNumber,
-    email: item.email,
-    status: item.quoteStatus,
+    phone: item.phoneNumber || "-",
+    email: item.email || "-",
+    status: item.quoteStatus || "-",
   }));
 
 
@@ -61,6 +62,8 @@ const MyQuote = () => {
   useEffect(() => {
     fetchQuotes();
   }, [page]);
+  
+   const totalPages = Math.ceil(total / LIMIT);
 
   if (loading) return <Loader/>;
 
@@ -78,7 +81,7 @@ const MyQuote = () => {
       <QuoteTable data={quotes} />
 
       {/* Pagination (basic) */}
-      <div style={{ marginTop: 16 }}>
+      {/* <div style={{ marginTop: 16 }}>
         <button disabled={page === 1} onClick={() => setPage(page - 1)}>
           Prev
         </button>
@@ -91,7 +94,31 @@ const MyQuote = () => {
         >
           Next
         </button>
-      </div>
+      </div> */}
+
+      {total > LIMIT && (
+  <div className="pagination">
+    <button
+      className="pagination-btn"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Prev
+    </button>
+
+    <span className="pagination-info">
+      Page {page} of {totalPages}
+    </span>
+
+    <button
+      className="pagination-btn"
+      disabled={page === totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
     </div>
 </div>
   );

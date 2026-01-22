@@ -17,6 +17,7 @@ html, body, * {
   --color-bg-main: #faf9f6;
   --color-bg-secondary: #e6dccf;
   --color-primary: #4a3326;
+    --font-primary: "Libre Baskerville", serif;
 
   /* ADD THESE (for chat) */
   --primary-color: #4a3326;
@@ -26,6 +27,7 @@ html, body, * {
 
   /* RGB for opacity usage */
   --primary-color-rgb: 74, 51, 38;
+ --bs-secondary-color: rgba(var(--primary-color-rgb), 0.75);
 }
 html, body, * {
   font-family: var(--font-primary) !important;

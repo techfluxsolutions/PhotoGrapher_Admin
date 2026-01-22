@@ -27,27 +27,46 @@ const Payment = () => {
     return () => clearInterval(interval);
   }, [isSidebarOpen]);
 
-  const mapPaymentsResponse = (payments = []) =>
-    payments.map((item) => {
-      const total =
-        (item.upfront_amount || 0) + (item.outstanding_amount || 0);
+  // const mapPaymentsResponse = (payments = []) =>
+  //   payments.map((item) => {
+  //     const total =
+  //       (item.upfront_amount || 0) + (item.outstanding_amount || 0);
 
-      return {
-        id: item._id,
-        bookingId: item.job_id || "-",
-        invoiceId: item.invoice_number,
-        invoiceDbId: item._id, // 👈 use correct backend id
-        totalAmount: `₹${total.toLocaleString("en-IN")}`,
-        paidAmount: `₹${item.upfront_amount.toLocaleString("en-IN")}`,
-        pendingAmount: `₹${item.outstanding_amount.toLocaleString("en-IN")}`,
-      };
-    });
+  //     return {
+  //       id: item._id,
+  //       bookingId: item._id || "-",
+  //       invoiceId: item.invoice_number,
+  //       invoiceDbId: item._id, // 👈 use correct backend id
+  //       totalAmount: `₹${total.toLocaleString("en-IN")}`,
+  //       paidAmount: `₹${item.upfront_amount.toLocaleString("en-IN")}`,
+  //       pendingAmount: `₹${item.outstanding_amount.toLocaleString("en-IN")}`,
+  //     };
+  //   });
+
+  const mapPaymentsResponse = (payments = []) =>
+  payments.map((item) => ({
+    id: item._id,
+    bookingId: item._id,
+    invoiceId: item._id, // since backend has no invoice_number
+    invoiceDbId: item._id,
+
+    totalAmount: `₹${item.totalAmount.toLocaleString("en-IN")}`,
+    paidAmount: `₹${
+      (item.totalAmount - item.outStandingAmount).toLocaleString("en-IN")
+    }`,
+    pendingAmount: `₹${item.outStandingAmount.toLocaleString("en-IN")}`,
+
+    paymentStatus: item.paymentStatus,
+    paymentMode: item.paymentMode,
+    paymentDate: item.paymentDate,
+  }));
 
   const fetchPayments = async () => {
     setLoading(true);
 
     try {
       const res = await getPaymentsAPI(page, 10);
+      console.log("RESPONSE",res?.data?.data)
       setPayments(mapPaymentsResponse(res?.data?.data));
       setTotal(res?.data?.meta?.total);
     } catch (err) {
@@ -60,6 +79,10 @@ const Payment = () => {
   useEffect(() => {
     fetchPayments();
   }, [page]);
+
+    const LIMIT=10;
+    const totalPages = Math.ceil(total / LIMIT);
+
 
   if (loading) return <Loader />;
 
@@ -75,7 +98,32 @@ const Payment = () => {
 
         <PaymentTable data={payments} />
 
-        <div style={{ marginTop: 16 }}>
+        
+      {total > LIMIT && (
+  <div className="pagination">
+    <button
+      className="pagination-btn"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Prev
+    </button>
+
+    <span className="pagination-info">
+      Page {page} of {totalPages}
+    </span>
+
+    <button
+      className="pagination-btn"
+      disabled={page === totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
+
+        {/* <div style={{ marginTop: 16 }}>
           <button disabled={page === 1} onClick={() => setPage(page - 1)}>
             Prev
           </button>
@@ -86,7 +134,7 @@ const Payment = () => {
           >
             Next
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getPreviousBookingsAPI } from "../../../utils/APIs/bookingsApis";
 import BookingsTable from "../BookingsTable/BookingsTable";
+import Loader from "../../../Loader/Loader";
 
 const LIMIT = 10;
 
@@ -8,7 +9,6 @@ const PreviousBookingsTable = () => {
   const [data, setData] = useState([]);
   const [fromDate, setFromDate] = useState("2025-01-01");
   const [toDate, setToDate] = useState("2026-01-14");
-
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -33,6 +33,10 @@ const PreviousBookingsTable = () => {
   }, []);
 
   const totalPages = Math.ceil(total / LIMIT);
+
+  if(loading){
+    return <Loader/>
+  }
 
   return (
     <>
@@ -70,27 +74,29 @@ const PreviousBookingsTable = () => {
       <BookingsTable data={data} page={page} limit={LIMIT}/>
 
       {/* Pagination */}
-      {total > LIMIT && (
-        <div className="pagination">
-          <button
-            disabled={page === 1 || loading}
-            onClick={() => fetchData(page - 1)}
-          >
-            Prev
-          </button>
+     {total > LIMIT && (
+  <div className="pagination">
+    <button
+      className="pagination-btn"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Prev
+    </button>
 
-          <span>
-            Page {page} of {totalPages}
-          </span>
+    <span className="pagination-info">
+      Page {page} of {totalPages}
+    </span>
 
-          <button
-            disabled={page === totalPages || loading}
-            onClick={() => fetchData(page + 1)}
-          >
-            Next
-          </button>
-        </div>
-      )}
+    <button
+      className="pagination-btn"
+      disabled={page === totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
     </>
   );
 };

@@ -78,7 +78,7 @@
 
 
 import { useState } from "react";
-
+import "./LatestQuotes.css"
 const LatestQuotes = () => {
   const [showAll, setShowAll] = useState(false);
 
@@ -114,22 +114,23 @@ const LatestQuotes = () => {
   return (
     <div className="card shadow-sm">
       <div className="card-body">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="mb-0">Latest Quotes</h5>
-          <span className="fs-4">⋮</span>
-        </div>
+        {/* <div className="d-flex justify-content-between align-items-center mb-3 "> */}
+          {/* <h5 className="mb-0 dashboard-text-color">Latest Quotes</h5> */}
+            <h5 className="dashboard-text-color upcoming-booking-text">Latest Quotes</h5>
+          {/* <span className="fs-4">⋮</span> */}
+        {/* </div> */}
 
         {visibleQuotes.map((item, index) => (
           <div
             key={index}
-            className="d-flex justify-content-between align-items-center py-2 border-bottom"
+            className="d-flex justify-content-between align-items-center py-2 border-bottom quotes-card"
           >
             <div className="d-flex align-items-center gap-3">
               {item.avatar ? (
                 <img
                   src={item.avatar}
                   alt={item.name}
-                  className="rounded-circle"
+                  className="rounded-circle "
                   width="40"
                   height="40"
                 />
@@ -141,23 +142,26 @@ const LatestQuotes = () => {
               )}
 
               <div>
-                <div className="fw-semibold">{item.name}</div>
-                <small className="text-muted">{item.status}</small>
+                <div className="fw-semibold dashboard-text-color">{item.name}</div>
+                <small 
+                style={{ color: "#28AF38" }}
+                >{item.status}</small>
               </div>
             </div>
 
-            <div className="fw-semibold">{item.amount}</div>
+            <div className="fw-semibold dashboard-text-color">{item.amount}</div>
           </div>
         ))}
 
         {quotes.length > 3 && (
           <div
-            className="text-center mt-3 text-primary fw-semibold"
+            className="text-center mt-3 dashboard-text-color"
+            //  style={{ color:  }}
             role="button"
             onClick={() => setShowAll(!showAll)}
           >
             {showAll ? "View Less" : "View More"}{" "}
-            <span className={`ms-1 ${showAll ? "rotate-180" : ""}`}>⌄</span>
+            <div className={`ms-1 arrow-icon-quote ${showAll ? "rotate-180" : ""}`}>⌄</div>
           </div>
         )}
       </div>
