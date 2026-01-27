@@ -19,6 +19,14 @@ const Sidebar = ({ isOpen, onItemClick }) => {
         location.pathname.startsWith("/chat/quote")
       );
     }
+
+      // Bookings + Booking Chat  ✅ ADD THIS
+  if (path === "/bookings") {
+    return (
+      location.pathname === "/bookings" ||
+      location.pathname.startsWith("/chat/booking")
+    );
+  }
     return location.pathname === path;
   };
 
@@ -36,7 +44,7 @@ const Sidebar = ({ isOpen, onItemClick }) => {
       icon: (
         <img
           src={
-            location.pathname === "/bookings"
+            isActive("/bookings")
               ? "/Icons/camera-active.png"
               : hoveredPath === "/bookings"
                 ? "/Icons/camera-active.png"

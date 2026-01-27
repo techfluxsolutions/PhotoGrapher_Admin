@@ -10,6 +10,7 @@ import MyQuote from "../Pages/MyQuote/MyQuote";
 import Payment from "../Pages/Payment/Payment";
 import Customer from "../Pages/Customer/Customer";
 import Chats from "../Pages/Chats/Chats";
+import { ChatDataProvider } from "../Context/chatDataContext";
 
 const AppRoutes = () => {
   const [isOffline, setIsOffline] = useState(false);
@@ -50,7 +51,9 @@ const AppRoutes = () => {
         <Route
           element={
             <PrivateRoute>
-              <Layout />
+              <ChatDataProvider>
+                <Layout />
+              </ChatDataProvider>
             </PrivateRoute>
           }
         >

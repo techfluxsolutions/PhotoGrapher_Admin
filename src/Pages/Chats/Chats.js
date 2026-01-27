@@ -9,40 +9,64 @@ import { connectChatSocket, disconnectChatSocket } from "../../socket/chatSocket
 import { getChatMessages, sendMessageApi } from "../../utils/APIs/chatApis";
 // import { getAccessToken } from "../../utils/APIs/commonHeadApiLogic";
 import AddQuoteModal from "./AddQuoteModal/AddQuoteModal";
+import { useChatData } from "../../Context/chatDataContext";
+import QuotePaymentCard from "./QuotePaymentCard/QuotePaymentCard";
+import AddBookingModal from "./AddBookingModal/AddBookingModal";
+import PinnedPaymentCard from "./PinnedPaymentCard/PinnedPayentCard";
 
 const Chats = ({ chatType }) => {
   const { bookingId, quoteId } = useParams();
   const targetId = chatType === "booking" ? bookingId : quoteId;
   const roomId = `booking_${targetId}`;
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+   const [showBookingModal, setShowBookingModal] = useState(false);
+  const { quote, booking } = useChatData();
+
+  useEffect(() => {
+    if (chatType === "quote" && !quote && quoteId) {
+      // fallback fetch
+
+    }
+    if (chatType === "booking" && !booking && bookingId) {
+      // fallback fetch
+    }
+  }, [chatType, quoteId, bookingId]);
 
 
-  {/* Helper functions (put these outside the component) */}
+  console.log("QUOTE", quote);
+  console.log("BOOKING", booking)
+  {/* Helper functions (put these outside the component) */ }
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-IN', { 
-    day: 'numeric', 
-    month: 'short',
-    year: 'numeric'
-  });
-}
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  }
 
-const formatTime = (timestamp) => {
-  return new Date(timestamp).toLocaleTimeString('en-IN', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  });
-}
+  const formatTime = (timestamp) => {
+    return new Date(timestamp).toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  }
 
- 
+
 
   const chatEndRef = useRef(null);
   const [messages, setMessages] = useState([]);
+  const [pinnedMessages,setPinnedMessages] = useState(null)
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const oppontentName = messages.find((singleMessage) => {
+    return singleMessage.senderId !== null;
+  })
+  console.log("opponent name", oppontentName?.senderId?.username)
+
 
   /* =========================
      GET CURRENT USER ID FROM TOKEN
@@ -93,7 +117,9 @@ const formatTime = (timestamp) => {
         setLoading(true);
         const res = await getChatMessages(targetId);
         if (res.data?.success) {
-          setMessages(res.data.data);
+          console.log("PINNED--",)
+          setPinnedMessages(res?.data?.pinned);
+          setMessages(res?.data?.data);
         }
       } catch (err) {
         console.error("Failed to load messages", err);
@@ -105,6 +131,8 @@ const formatTime = (timestamp) => {
     fetchMessages();
   }, [targetId]);
 
+
+  
   /* =========================
      SOCKET CONNECTION
   ========================= */
@@ -166,32 +194,47 @@ const formatTime = (timestamp) => {
   };
 
 
-const handleQuoteSend = async (payload) => {
-  if (!targetId) return;
+  // const handleQuoteSend = async (payload) => {
+  //   if (!targetId) return;
 
-  // 1️⃣ Add temporary _id for optimistic rendering
-  const tempId = `temp-${Date.now()}`;
-  const tempMessage = { ...payload, _id: tempId };
+  //   // 1️⃣ Add temporary _id for optimistic rendering
+  //   const tempId = `temp-${Date.now()}`;
+  //   const tempMessage = { ...payload, _id: tempId };
 
-  setMessages((prev) => [...prev, tempMessage]);
+  //   setMessages((prev) => [...prev, tempMessage]);
 
-  try {
-    // 2️⃣ Send to backend
-    const res = await sendMessageApi(targetId, payload);
+  //   try {
+  //     // 2️⃣ Send to backend
+  //     const res = await sendMessageApi(targetId, payload);
 
-    // Optional: Replace tempId with real _id from backend
-    if (res.data?.success) {
-      const realMessage = res.data.data; // make sure backend returns saved message
-      setMessages((prev) =>
-        prev.map((msg) => (msg._id === tempId ? realMessage : msg))
-      );
+  //     // Optional: Replace tempId with real _id from backend
+  //     if (res.data?.success) {
+  //       const realMessage = res.data.data; // make sure backend returns saved message
+  //       setMessages((prev) =>
+  //         prev.map((msg) => (msg._id === tempId ? realMessage : msg))
+  //       );
+  //     }
+  //   } catch (err) {
+  //     console.error("Payment card send failed", err);
+  //     // Remove temp message or mark as failed
+  //     setMessages((prev) => prev.filter((msg) => msg._id !== tempId));
+  //   }
+  // };
+
+  const handleQuoteSend = async (payload) => {
+    if (!targetId) return;
+
+    try {
+      await sendMessageApi(targetId, payload);
+      // socket will add it once
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err) {
-    console.error("Payment card send failed", err);
-    // Remove temp message or mark as failed
-    setMessages((prev) => prev.filter((msg) => msg._id !== tempId));
+  };
+
+  const handleBookingSend = () =>{
+    console.log("BOOKING SEND")
   }
-};
 
 
 
@@ -221,8 +264,9 @@ const handleQuoteSend = async (payload) => {
                 />
               </div>
               <div className="admin-info">
-                <p className="admin-name mb-0">Conversation</p>
-                <span className="admin-status">#{targetId}</span>
+                <p className="admin-name mb-0">{oppontentName?.senderId?.username || "User"}</p>
+                <span className="admin-status mb-0">Online</span>
+                {/* <span className="admin-status">#{targetId}</span> */}
               </div>
             </div>
             {/* <div className="menu">⋮</div> */}
@@ -230,7 +274,19 @@ const handleQuoteSend = async (payload) => {
             <div className="chat-header-right">
               <button
                 className="chat-header-btn"
-                onClick={() => setShowPaymentModal(true)}
+                onClick={() => {
+                  if(quoteId)
+                  {
+                    setShowPaymentModal(true)
+                    return
+                  }
+
+                  if(bookingId){
+                    setShowBookingModal(true)
+                    return
+                  }
+
+                }}
               >
                 +
               </button>
@@ -238,16 +294,37 @@ const handleQuoteSend = async (payload) => {
 
               {/* <div className="menu">⋮</div> */}
             </div>
-            <AddQuoteModal
-  isOpen={showPaymentModal}
-  onClose={() => setShowPaymentModal(false)}
-  onSubmit={handleQuoteSend}
-/>
 
+           {quoteId && 
+            <AddQuoteModal
+              isOpen={showPaymentModal}
+              onClose={() => setShowPaymentModal(false)}
+              onSubmit={handleQuoteSend}
+            />
+            } 
+            {
+              bookingId && 
+              <AddBookingModal
+              isOpen={showBookingModal}
+              onClose={() => setShowBookingModal(false)}
+              onSubmit={handleBookingSend}
+
+            />
+            }
+            
+             
+          </div>
+
+             <div className="chat-container">
+          <PinnedPaymentCard
+            pinned={pinnedMessages}
+            formatDate={formatDate}
+          />
           </div>
 
           {/* Chat Body */}
           <div className="chat-body">
+
             {messages.length === 0 && !loading && (
               <div className="text-center text-muted mt-5">No messages yet. Start the conversation!</div>
             )}
@@ -263,6 +340,8 @@ const handleQuoteSend = async (payload) => {
                   key={msg._id || Math.random()}
                   className={`message-row ${isMe ? "right" : "left"}`}
                 >
+
+
                   {/* isme */}
                   {!isMe && (
                     <img
@@ -278,129 +357,18 @@ const handleQuoteSend = async (payload) => {
                       {isMe ? "You" : (sender?.username || "User")}
                     </small>
                     {/* <div className="text-content">{msg.message}</div> */}
-         <div className="text-content">
-  {msg.messageType === "text" && msg.message}
+                    <div className="text-content">
+                      {msg.messageType === "text" && msg.message}
 
-  {msg.messageType === "paymentCard" && (
-    <div className={`payment-card ${isMe ? "my-card" : "their-card"}`}>
-      
-      {/* Premium Header with Branding */}
-      <div className="payment-card-header">
-        <div className="header-content">
-          <div className="brand-section">
-            <div className="brand-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M20 4H4C2.89 4 2.01 4.89 2.01 6L2 18C2 19.11 2.89 20 4 20H20C21.11 20 22 19.11 22 18V6C22 4.89 21.11 4 20 4ZM20 18H4V12H20V18ZM20 8H4V6H20V8Z" 
-                  fill="currentColor" opacity="0.9"/>
-              </svg>
-            </div>
-            <div className="brand-text">
-              <span className="card-subtitle">Event Proposal</span>
-              <span className="card-title">Budget Summary</span>
-            </div>
-          </div>
-          <div className="amount-section">
-            <div className="amount-wrapper">
-              <span className="currency">₹</span>
-              <span className="card-amount">{msg.budget}</span>
-            </div>
-            <span className="amount-label">Total Budget</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Decorative Separator */}
-      <div className="card-separator">
-        <div className="separator-line"></div>
-        <div className="separator-dot"></div>
-      </div>
-
-      {/* Content with Clear Visual Hierarchy */}
-      <div className="payment-card-body">
-        {/* Dates Section */}
-        <div className="info-section">
-          <div className="section-header">
-            <div className="section-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 6h14v2H5V6zm7 7h5v5h-5z" 
-                  fill="currentColor" opacity="0.8"/>
-              </svg>
-            </div>
-            <span className="section-title">Event Schedule</span>
-          </div>
-          <div className="section-content">
-            <div className="date-range">
-              <div className="date-item">
-                <span className="date-label">From</span>
-                <span className="date-value">{formatDate(msg.startDate)}</span>
-              </div>
-              <div className="arrow-icon">→</div>
-              <div className="date-item">
-                <span className="date-label">To</span>
-                <span className="date-value">{formatDate(msg.endDate)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Location Section */}
-        <div className="info-section">
-          <div className="section-header">
-            <div className="section-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" 
-                  fill="currentColor" opacity="0.8"/>
-              </svg>
-            </div>
-            <span className="section-title">Venue</span>
-          </div>
-          <div className="section-content">
-            <div className="location-text">{msg.location}</div>
-          </div>
-        </div>
-
-        {/* Note Section (Conditional) */}
-        {msg.message && (
-          <div className="note-section">
-            <div className="note-header">
-              <div className="note-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" 
-                    fill="currentColor" opacity="0.8"/>
-                </svg>
-              </div>
-              <span className="note-title">Special Notes</span>
-            </div>
-            <div className="note-content">
-              <p className="note-text">"{msg.message}"</p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Footer with Timestamp */}
-      <div className="payment-card-footer">
-        <div className="footer-content">
-          <div className="timestamp">
-            <span className="time-icon">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" 
-                  fill="currentColor" opacity="0.7"/>
-              </svg>
-            </span>
-            <span className="time-text">
-              {msg.createdAt ? formatTime(msg.createdAt) : 'Just now'}
-            </span>
-          </div>
-          <div className="status-indicator">
-            <div className="status-dot"></div>
-            <span className="status-text">Sent</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  )}
-</div>
+                      {msg.messageType === "paymentCard" && quoteId && (
+                        <QuotePaymentCard
+                          msg={msg}
+                          isMe={isMe}
+                          formatDate={formatDate}
+                          formatTime={formatTime}
+                        />
+                      )}
+                    </div>
 
 
 

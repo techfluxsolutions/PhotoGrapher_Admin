@@ -31,7 +31,7 @@ const MyQuote = () => {
   quotes.map((item) => ({
     id: item._id || "-",
     eventType: item.eventType || "-",
-    eventDate: new Date(item.eventDate).toLocaleDateString("en-IN") || "-",
+    eventDate: new Date(item.startDate).toLocaleDateString("en-IN") || "-",
     location: item.location || "-",
     duration: `${item.eventDuration} hrs` || "-",
     photography: item.photographyRequirements || "-",
@@ -80,21 +80,7 @@ const MyQuote = () => {
 
       <QuoteTable data={quotes} />
 
-      {/* Pagination (basic) */}
-      {/* <div style={{ marginTop: 16 }}>
-        <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-          Prev
-        </button>
-        <span style={{ margin: "0 12px" }}>
-          Page {page}
-        </span>
-        <button
-          disabled={page * 10 >= total}
-          onClick={() => setPage(page + 1)}
-        >
-          Next
-        </button>
-      </div> */}
+    
 
       {total > LIMIT && (
   <div className="pagination">

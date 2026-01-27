@@ -1,11 +1,15 @@
 import React from "react";
 import "./QuoteTable.css";
 import { useNavigate } from "react-router-dom";
+import { useChatData } from "../../../Context/chatDataContext";
 
 const QuoteTable = ({ data }) => {
   const navigate = useNavigate();
-  const handleChatClick = (quoteId) => {
-  navigate(`/chat/quote/${quoteId}`);
+  const { setQuote } = useChatData();
+
+  const handleChatClick = (quote) => {
+    setQuote(quote);
+  navigate(`/chat/quote/${quote.id}`);
 };
 
   return (
@@ -17,7 +21,7 @@ const QuoteTable = ({ data }) => {
             <th>Event Type</th>
             <th>Event Date</th>
             <th>Event Location</th>
-            <th>Duration</th>
+            {/* <th>Duration</th> */}
             <th>Photography</th>
             <th>Budget</th>
             <th>Name</th>
@@ -34,7 +38,7 @@ const QuoteTable = ({ data }) => {
               <td>{item.eventType}</td>
               <td>{item.eventDate}</td>
               <td>{item.location}</td>
-              <td>{item.duration}</td>
+              {/* <td>{item.duration}</td> */}
               <td>{item.photography}</td>
               <td>{item.budget}</td>
               <td>{item.name}</td>
@@ -43,7 +47,7 @@ const QuoteTable = ({ data }) => {
               <td>
                 <button
                   className="chat-btn"
-                  onClick={() => handleChatClick(item.id)} // use unique quote id
+                  onClick={() => handleChatClick(item)} // use unique quote id
                 >
                   💬
                 </button>
